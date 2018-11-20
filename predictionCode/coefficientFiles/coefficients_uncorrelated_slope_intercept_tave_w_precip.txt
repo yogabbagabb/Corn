@@ -1,0 +1,95 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ tave5 + precip5 + (1 | State) + (0 + tave5 |  
+    State) + tave6 + precip6 + (0 + tave6 | State) + tave7 +  
+    precip7 + (0 + tave7 | State) + tave8 + precip8 + (0 + tave8 |      State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 285399.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-4.8777 -0.5604  0.0937  0.6776  3.4233 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ State    (Intercept) 2606.55  51.054  
+ State.1  tave5         16.56   4.069  
+ State.2  tave6         12.51   3.536  
+ State.3  tave7         86.23   9.286  
+ State.4  tave8         16.52   4.064  
+ Residual              524.90  22.911  
+Number of obs: 31328, groups:  State, 12
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   1.5480    14.7404   0.105
+tave5         4.9838     1.1916   4.182
+precip5       1.6548     0.1419  11.659
+tave6         4.1262     1.0468   3.942
+precip6       2.5663     0.1406  18.255
+tave7        -4.8162     2.6922  -1.789
+precip7       4.2981     0.1399  30.734
+tave8        -7.4027     1.1993  -6.173
+precip8       3.0107     0.1405  21.433
+
+Correlation of Fixed Effects:
+        (Intr) tave5  precp5 tave6  precp6 tave7  precp7 tave8 
+tave5    0.001                                                 
+precip5  0.000  0.019                                          
+tave6    0.000 -0.007  0.011                                   
+precip6  0.000  0.002 -0.157  0.005                            
+tave7    0.000 -0.003 -0.008 -0.005  0.014                     
+precip7  0.000 -0.008 -0.048 -0.001 -0.115  0.008              
+tave8    0.001  0.002 -0.012 -0.012 -0.020 -0.008  0.027       
+precip8  0.000 -0.014 -0.022  0.000 -0.030  0.001  0.012  0.021
+convergence code: 0
+unable to evaluate scaled gradient
+Model failed to converge: degenerate  Hessian with 1 negative eigenvalues
+
+
+_________________
+
+$State
+             (Intercept)      tave5  precip5     tave6  precip6      tave7
+ILLINOIS       28.051743  3.5567433 1.654784  1.244230 2.566306 -15.525053
+INDIANA        16.026081  2.2123161 1.654784  3.898808 2.566306 -12.531623
+IOWA           19.129320 -0.9790966 1.654784  2.863667 2.566306  -2.383438
+KANSAS        -23.263158  6.7914594 1.654784 -4.121718 2.566306 -10.759010
+MICHIGAN        7.406911  2.9175591 1.654784  5.463666 2.566306   6.045144
+MINNESOTA      23.894289  6.1178878 1.654784  8.659288 2.566306   8.969757
+MISSOURI       -2.407352 11.0150015 1.654784  6.285709 2.566306 -14.622271
+NEBRASKA      -20.222834 13.2028939 1.654784  4.911807 2.566306 -12.235025
+NORTH DAKOTA  -24.082316  3.2463652 1.654784  4.556554 2.566306   5.312658
+OHIO            6.867852  2.8889075 1.654784  4.283141 2.566306  -8.334280
+SOUTH DAKOTA  -25.486257  6.9601878 1.654784  3.378123 2.566306  -4.688380
+WISCONSIN      12.661239  1.8753485 1.654784  8.090994 2.566306   2.957449
+              precip7      tave8  precip8
+ILLINOIS     4.298142 -11.261942 3.010734
+INDIANA      4.298142  -7.235424 3.010734
+IOWA         4.298142 -16.732565 3.010734
+KANSAS       4.298142  -5.525338 3.010734
+MICHIGAN     4.298142  -4.909616 3.010734
+MINNESOTA    4.298142  -4.384999 3.010734
+MISSOURI     4.298142  -8.475701 3.010734
+NEBRASKA     4.298142  -3.416188 3.010734
+NORTH DAKOTA 4.298142  -3.265262 3.010734
+OHIO         4.298142  -8.819422 3.010734
+SOUTH DAKOTA 4.298142 -10.271271 3.010734
+WISCONSIN    4.298142  -4.534246 3.010734
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+             Estimate Std. Error    t value
+(Intercept)  1.547960 14.7404051  0.1050147
+tave5        4.983798  1.1916258  4.1823512
+precip5      1.654784  0.1419303 11.6591330
+tave6        4.126189  1.0467933  3.9417420
+precip6      2.566306  0.1405810 18.2550025
+tave7       -4.816173  2.6921940 -1.7889397
+precip7      4.298142  0.1398512 30.7336887
+tave8       -7.402664  1.1992652 -6.1726665
+precip8      3.010734  0.1404692 21.4334147

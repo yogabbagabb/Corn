@@ -1,0 +1,92 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ vpdave5 + precip5 + (1 | State) + (0 + vpdave5 |  
+    State) + vpdave6 + precip6 + (0 + vpdave6 | State) + vpdave7 +  
+    precip7 + (0 + vpdave7 | State) + vpdave8 + precip8 + (0 +  
+    vpdave8 | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 280222
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.2663 -0.5873  0.0749  0.6837  3.4542 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ State    (Intercept) 234.678  15.319  
+ State.1  vpdave5       9.565   3.093  
+ State.2  vpdave6      11.689   3.419  
+ State.3  vpdave7     106.529  10.321  
+ State.4  vpdave8      15.704   3.963  
+ Residual             445.240  21.101  
+Number of obs: 31328, groups:  State, 12
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)  -4.7999     4.4260  -1.084
+vpdave5       2.0297     0.9123   2.225
+precip5       1.0849     0.1586   6.841
+vpdave6       2.8164     1.0146   2.776
+precip6      -0.3068     0.1489  -2.061
+vpdave7     -10.3975     2.9961  -3.470
+precip7      -0.2966     0.1453  -2.042
+vpdave8     -14.0393     1.1856 -11.842
+precip8      -0.9535     0.1453  -6.561
+
+Correlation of Fixed Effects:
+        (Intr) vpdav5 precp5 vpdav6 precp6 vpdav7 precp7 vpdav8
+vpdave5  0.000                                                 
+precip5 -0.001  0.097                                          
+vpdave6  0.000 -0.014  0.018                                   
+precip6  0.002 -0.016 -0.037  0.089                            
+vpdave7  0.000 -0.002 -0.013 -0.009  0.014                     
+precip7  0.002 -0.001 -0.033 -0.042 -0.026  0.035              
+vpdave8  0.003 -0.002 -0.005 -0.006 -0.038 -0.015  0.017       
+precip8  0.004 -0.023 -0.045 -0.007 -0.044 -0.017  0.070  0.113
+
+_________________
+
+$State
+             (Intercept)    vpdave5  precip5   vpdave6    precip6     vpdave7
+ILLINOIS       13.265840  6.1500461 1.084883  3.241161 -0.3067593 -25.6187015
+INDIANA         5.233297  4.2640683 1.084883  7.338987 -0.3067593 -28.5437942
+IOWA           14.445466  3.2993940 1.084883  2.355232 -0.3067593  -3.5176193
+KANSAS         -9.311028 -1.2520595 1.084883 -3.834910 -0.3067593 -10.7689981
+MICHIGAN      -10.545170  1.5127318 1.084883  1.927083 -0.3067593   0.3141263
+MINNESOTA       3.824085  1.0845214 1.084883  7.457110 -0.3067593   5.0436993
+MISSOURI        0.668427  7.3655390 1.084883  1.721064 -0.3067593 -14.3421704
+NEBRASKA      -10.447479 -0.4890310 1.084883 -1.170855 -0.3067593 -14.5944552
+NORTH DAKOTA  -39.727966 -1.6620770 1.084883  2.193315 -0.3067593  -3.3565873
+OHIO            1.647483  4.6221719 1.084883  6.799925 -0.3067593 -17.8956908
+SOUTH DAKOTA  -22.893053  0.2426350 1.084883  1.851613 -0.3067593  -8.7062578
+WISCONSIN      -3.758782 -0.7820673 1.084883  3.917190 -0.3067593  -2.7834604
+                precip7    vpdave8    precip8
+ILLINOIS     -0.2966465 -12.732312 -0.9534528
+INDIANA      -0.2966465 -12.537123 -0.9534528
+IOWA         -0.2966465 -20.996863 -0.9534528
+KANSAS       -0.2966465  -7.432964 -0.9534528
+MICHIGAN     -0.2966465 -12.469673 -0.9534528
+MINNESOTA    -0.2966465 -20.231913 -0.9534528
+MISSOURI     -0.2966465 -12.073287 -0.9534528
+NEBRASKA     -0.2966465 -13.864073 -0.9534528
+NORTH DAKOTA -0.2966465 -10.380714 -0.9534528
+OHIO         -0.2966465 -16.980141 -0.9534528
+SOUTH DAKOTA -0.2966465 -14.572615 -0.9534528
+WISCONSIN    -0.2966465 -14.200403 -0.9534528
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+               Estimate Std. Error    t value
+(Intercept)  -4.7999066  4.4259929  -1.084481
+vpdave5       2.0296561  0.9123375   2.224677
+precip5       1.0848827  0.1585834   6.841087
+vpdave6       2.8164094  1.0145551   2.776004
+precip6      -0.3067593  0.1488653  -2.060650
+vpdave7     -10.3974924  2.9960843  -3.470360
+precip7      -0.2966465  0.1452534  -2.042269
+vpdave8     -14.0393401  1.1855934 -11.841614
+precip8      -0.9534528  0.1453172  -6.561183

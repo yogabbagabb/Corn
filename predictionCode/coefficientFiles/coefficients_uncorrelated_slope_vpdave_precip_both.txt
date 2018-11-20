@@ -1,0 +1,99 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ vpdave5 + precip5 + (0 + vpdave5 + precip5 |  
+    State) + vpdave6 + precip6 + (0 + vpdave6 + precip6 | State) +  
+    vpdave7 + precip7 + (0 + vpdave7 + precip7 | State) + vpdave8 +  
+    precip8 + (0 + vpdave8 + precip8 | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 282316.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.6661 -0.5987  0.0714  0.6816  3.3546 
+
+Random effects:
+ Groups   Name    Variance Std.Dev. Corr 
+ State    vpdave5   16.21   4.026        
+          precip5   33.81   5.815   -0.03
+ State.1  vpdave6   46.29   6.804        
+          precip6  103.86  10.191   0.83 
+ State.2  vpdave7 1375.63  37.090        
+          precip7  590.91  24.309   0.96 
+ State.3  vpdave8  132.26  11.500        
+          precip8   81.57   9.031   -0.40
+ Residual          472.76  21.743        
+Number of obs: 31328, groups:  State, 12
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   3.1996     0.1858  17.219
+vpdave5       2.5482     1.1788   2.162
+precip5       3.8024     1.6880   2.253
+vpdave6       4.2049     1.9794   2.124
+precip6       2.3429     2.9473   0.795
+vpdave7     -12.2023    10.7119  -1.139
+precip7       1.8935     7.0196   0.270
+vpdave8     -12.6819     3.3349  -3.803
+precip8       2.1951     2.6139   0.840
+
+Correlation of Fixed Effects:
+        (Intr) vpdav5 precp5 vpdav6 precp6 vpdav7 precp7 vpdav8
+vpdave5 -0.020                                                 
+precip5 -0.006 -0.023                                          
+vpdave6 -0.007 -0.006  0.000                                   
+precip6  0.003 -0.001 -0.001  0.821                            
+vpdave7  0.002  0.000  0.000 -0.001  0.000                     
+precip7  0.003  0.000  0.000 -0.001  0.000  0.955              
+vpdave8  0.021 -0.001 -0.001 -0.002 -0.001 -0.002  0.000       
+precip8  0.010 -0.002 -0.001 -0.001 -0.001  0.000  0.000 -0.393
+convergence code: 0
+unable to evaluate scaled gradient
+Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
+
+
+_________________
+
+$State
+             (Intercept)    vpdave5    precip5   vpdave6    precip6     vpdave7
+ILLINOIS        3.199575  9.4589853  3.9128995  5.717158 -3.3059835 -34.1249544
+INDIANA         3.199575  4.4079978  0.9461590  5.994236 -3.1636166 -31.3847482
+IOWA            3.199575  5.2560665  2.1749551  5.196194 -0.5096832  -9.6620169
+KANSAS          3.199575 -2.7872085 -1.3330541 -4.215900 -2.1793490 -14.2819107
+MICHIGAN        3.199575  1.0186439  4.1787801  1.450267  6.8409786   5.8083240
+MINNESOTA       3.199575  2.5024817  3.3436760  9.943613  5.5208232   5.0714097
+MISSOURI        3.199575  7.3457025  1.3688290  2.007310 -2.2017996 -17.5781019
+NEBRASKA        3.199575 -1.2722111  3.1536099 -2.755979  1.5100895 -20.1729235
+NORTH DAKOTA    3.199575 -0.5686316 14.5625349 11.862933 18.2463770   0.3404243
+OHIO            3.199575  4.2321086  0.4325842  5.637798 -0.2697779 -15.4119655
+SOUTH DAKOTA    3.199575  3.4861372 13.6518824  6.578287  6.1465588 -14.0584059
+WISCONSIN       3.199575 -2.5015931 -0.7641657  3.042338  1.4797515  -0.9726325
+                precip7    vpdave8    precip8
+ILLINOIS     -1.6146866 -13.954040 -2.3740964
+INDIANA       0.9978787 -10.401351  0.3390269
+IOWA         -4.4959971 -30.088473 -4.1777395
+KANSAS       -3.9641048 -10.312271 -3.0362155
+MICHIGAN     12.2236881  -6.788691  4.2685155
+MINNESOTA     1.1331758 -21.611084 -0.3258968
+MISSOURI     -3.5330673 -13.575032 -2.0724989
+NEBRASKA     -1.8461279 -12.817720  1.4546243
+NORTH DAKOTA  8.0758292  -5.433433 15.6110356
+OHIO          1.9248408 -15.241590  0.1188863
+SOUTH DAKOTA  6.1763135  -8.714356 13.6854174
+WISCONSIN     7.6440544  -3.245320  2.8499444
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+              Estimate Std. Error    t value
+(Intercept)   3.199575  0.1858178 17.2188801
+vpdave5       2.548207  1.1787513  2.1617847
+precip5       3.802391  1.6879558  2.2526602
+vpdave6       4.204855  1.9794466  2.1242577
+precip6       2.342864  2.9473194  0.7949135
+vpdave7     -12.202292 10.7118859 -1.1391357
+precip7       1.893483  7.0196409  0.2697407
+vpdave8     -12.681947  3.3348617 -3.8028404
+precip8       2.195084  2.6138777  0.8397805

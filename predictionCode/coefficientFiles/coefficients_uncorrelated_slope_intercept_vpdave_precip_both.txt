@@ -1,0 +1,100 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ vpdave5 + precip5 + (1 | State) + (0 + vpdave5 +  
+    precip5 | State) + vpdave6 + precip6 + (0 + vpdave6 + precip6 |  
+    State) + vpdave7 + precip7 + (0 + vpdave7 + precip7 | State) +  
+    vpdave8 + precip8 + (0 + vpdave8 + precip8 | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 278766.1
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.5630 -0.6038  0.0662  0.6808  3.8458 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ State    (Intercept)  322.630 17.962       
+ State.1  vpdave5       11.236  3.352       
+          precip5        6.306  2.511   0.17
+ State.2  vpdave6      702.080 26.497       
+          precip6      278.862 16.699   0.98
+ State.3  vpdave7      363.405 19.063       
+          precip7       65.910  8.118   0.82
+ State.4  vpdave8     1734.550 41.648       
+          precip8      428.939 20.711   1.00
+ Residual              421.392 20.528       
+Number of obs: 31328, groups:  State, 12
+
+Fixed effects:
+             Estimate Std. Error t value
+(Intercept)  -2.53152    5.19022  -0.488
+vpdave5       1.93208    0.98548   1.961
+precip5       1.36185    0.74653   1.824
+vpdave6       2.59459    7.65263   0.339
+precip6       1.06114    4.82379   0.220
+vpdave7     -10.33341    5.51216  -1.875
+precip7       0.86609    2.35030   0.369
+vpdave8     -12.65500   12.02697  -1.052
+precip8       0.06361    5.98154   0.011
+
+Correlation of Fixed Effects:
+        (Intr) vpdav5 precp5 vpdav6 precp6 vpdav7 precp7 vpdav8
+vpdave5  0.000                                                 
+precip5  0.002  0.184                                          
+vpdave6  0.000 -0.002  0.001                                   
+precip6  0.000 -0.001  0.000  0.974                            
+vpdave7  0.000 -0.001 -0.002 -0.001  0.000                     
+precip7  0.001  0.000  0.000  0.000  0.000  0.818              
+vpdave8  0.000  0.000  0.000  0.000  0.000 -0.001  0.000       
+precip8  0.000 -0.001  0.000  0.000  0.000  0.000  0.000  0.995
+convergence code: 0
+unable to evaluate scaled gradient
+Model failed to converge: degenerate  Hessian with 3 negative eigenvalues
+
+
+_________________
+
+$State
+              (Intercept)    vpdave5    precip5     vpdave6    precip6
+ILLINOIS      14.17013178  5.2844983 -0.3395858  0.09543009 -3.7555208
+INDIANA        6.07747067  3.4448318 -0.2353308  4.84598338 -2.8505463
+IOWA          15.41080903  2.9733941 -1.2721385 -0.04291529 -2.9908115
+KANSAS        -6.50242649 -2.0769303 -0.3166671 -3.88131551 -0.7670576
+MICHIGAN       0.01157669  0.7358249  3.5614765  1.10916882  5.9772830
+MINNESOTA      6.08631053  2.3725970  3.6318845 10.25586015  5.5724908
+MISSOURI       2.47150924  7.6196672  1.6101403  1.78452272 -2.1356144
+NEBRASKA     -12.41982172  1.7169985  6.2112011  1.24311893  5.0791832
+NORTH DAKOTA -33.53718397 -2.1507747  1.1283786  4.67500821  6.1959667
+OHIO           1.80957518  4.3116148  0.5351070  5.80921475 -0.6729530
+SOUTH DAKOTA -22.42685678  1.7542672  3.2088898  2.91245748  1.9325787
+WISCONSIN     -1.52929954 -2.8009987 -1.3811820  2.32853789  1.1486544
+                 vpdave7    precip7    vpdave8    precip8
+ILLINOIS     -25.7397113  0.4615929 -11.564027 -1.1801228
+INDIANA      -29.0826819  1.2773347  -8.822584  0.8778417
+IOWA          -6.0356450 -3.1584741 -22.426531 -3.8550113
+KANSAS       -11.6024729 -1.7839472  -8.093413 -1.4837458
+MICHIGAN       6.0288479 11.4149580  -9.320772  3.5770100
+MINNESOTA      5.0772683  1.7393952 -18.596208 -0.0148902
+MISSOURI     -17.4058077 -3.3574761 -13.246564 -1.9267535
+NEBRASKA     -14.2751027 -0.6409066 -12.674312  0.5786092
+NORTH DAKOTA  -3.2345622  0.3369791  -9.105599  2.5810442
+OHIO         -16.5977747  1.7930459 -15.896752 -0.3215132
+SOUTH DAKOTA -11.0326501 -4.7685258 -14.044532 -0.5735109
+WISCONSIN     -0.1006644  7.0791620  -8.068755  2.5044130
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+                Estimate Std. Error     t value
+(Intercept)  -2.53151711  5.1902155 -0.48774797
+vpdave5       1.93208250  0.9854778  1.96055401
+precip5       1.36184779  0.7465349  1.82422520
+vpdave6       2.59458930  7.6526261  0.33904561
+precip6       1.06113776  4.8237950  0.21997986
+vpdave7     -10.33341304  5.5121628 -1.87465673
+precip7       0.86609483  2.3502980  0.36850426
+vpdave8     -12.65500402 12.0269661 -1.05221915
+precip8       0.06361421  5.9815435  0.01063508

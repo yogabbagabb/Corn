@@ -1,0 +1,47 @@
+
+Call:
+lm(formula = as.formula(model_formulas[j]), data = data.train)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-133.259  -10.139    1.997   12.877  204.720 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept)  -0.7893     0.2262  -3.490 0.000485 ***
+precip5       1.5595     0.2356   6.619 3.78e-11 ***
+precip6       0.5244     0.2065   2.539 0.011129 *  
+precip7       5.5265     0.2507  22.040  < 2e-16 ***
+precip8       1.7406     0.2067   8.421  < 2e-16 ***
+evi5         -7.4962     0.3788 -19.791  < 2e-16 ***
+evi6          4.0467     0.4389   9.221  < 2e-16 ***
+evi7          8.5231     0.4432  19.231  < 2e-16 ***
+evi8         23.5591     0.4172  56.472  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 21.93 on 10403 degrees of freedom
+  (1314 observations deleted due to missingness)
+Multiple R-squared:  0.6809,	Adjusted R-squared:  0.6807 
+F-statistic:  2775 on 8 and 10403 DF,  p-value: < 2.2e-16
+
+
+_________________
+
+(Intercept)     precip5     precip6     precip7     precip8        evi5 
+ -0.7892796   1.5594930   0.5244293   5.5264924   1.7405865  -7.4961876 
+       evi6        evi7        evi8 
+  4.0467083   8.5230525  23.5591000 
+
+_________________
+
+              Estimate Std. Error    t value      Pr(>|t|)
+(Intercept) -0.7892796  0.2261660  -3.489825  4.853391e-04
+precip5      1.5594930  0.2355949   6.619385  3.784664e-11
+precip6      0.5244293  0.2065446   2.539061  1.112947e-02
+precip7      5.5264924  0.2507450  22.040291 2.964221e-105
+precip8      1.7405865  0.2066860   8.421407  4.209727e-17
+evi5        -7.4961876  0.3787752 -19.790600  1.332763e-85
+evi6         4.0467083  0.4388724   9.220695  3.522728e-20
+evi7         8.5230525  0.4431977  19.230814  5.158498e-81
+evi8        23.5591000  0.4171833  56.471823  0.000000e+00

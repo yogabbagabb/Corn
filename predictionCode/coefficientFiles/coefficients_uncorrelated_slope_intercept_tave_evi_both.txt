@@ -1,0 +1,100 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ tave5 + evi5 + (1 | State) + (0 + tave5 +  
+    evi5 | State) + tave6 + evi6 + (0 + tave6 + evi6 | State) +  
+    tave7 + evi7 + (0 + tave7 + evi7 | State) + tave8 + evi8 +  
+    (0 + tave8 + evi8 | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 89769
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-6.2343 -0.5645  0.0524  0.6066  7.6576 
+
+Random effects:
+ Groups   Name        Variance Std.Dev. Corr
+ State    (Intercept) 117.59   10.844       
+ State.1  tave5        28.30    5.320       
+          evi5        961.58   31.009   0.67
+ State.2  tave6       385.74   19.640       
+          evi6        375.35   19.374   0.82
+ State.3  tave7       112.27   10.596       
+          evi7         72.43    8.511   0.81
+ State.4  tave8        50.97    7.140       
+          evi8        120.11   10.959   0.78
+ Residual             311.90   17.661       
+Number of obs: 10412, groups:  State, 12
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   6.0156     3.1958   1.882
+tave5         0.5438     1.5922   0.342
+evi5         -1.4883     8.9694  -0.166
+tave6         3.2683     5.6949   0.574
+evi6          2.6621     5.6177   0.474
+tave7        -9.3669     3.0904  -3.031
+evi7          2.0699     2.5112   0.824
+tave8         5.3096     2.1104   2.516
+evi8         24.2352     3.2011   7.571
+
+Correlation of Fixed Effects:
+      (Intr) tave5  evi5   tave6  evi6   tave7  evi7   tave8 
+tave5 -0.004                                                 
+evi5   0.004  0.644                                          
+tave6  0.002 -0.005  0.000                                   
+evi6  -0.002 -0.003 -0.004  0.818                            
+tave7 -0.003 -0.005 -0.001 -0.007  0.001                     
+evi7   0.007 -0.008  0.004 -0.002 -0.010  0.787              
+tave8  0.001 -0.008  0.000 -0.003  0.000 -0.008 -0.004       
+evi8  -0.003  0.002 -0.001 -0.001  0.005  0.003 -0.021  0.758
+convergence code: 0
+unable to evaluate scaled gradient
+Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
+
+
+_________________
+
+$State
+             (Intercept)      tave5        evi5      tave6       evi6
+ILLINOIS        9.410066 -2.7675763  -5.7667621 -2.6908607  7.7598844
+INDIANA        -4.264546  0.4044527  -8.4497620  0.8318262  9.0109127
+IOWA           10.190047 -3.7338702  -8.5364143 -4.8240951  5.6209550
+KANSAS         -2.676753 -3.1008950   4.0051735 -3.2095781 12.9056343
+MICHIGAN       13.210342 -1.0262314  -0.6217128 -0.2697226 -6.2451236
+MINNESOTA      19.822280 -1.0517801   7.3270939  8.7970074 -6.9751775
+MISSOURI        3.498228  6.8390190 -13.6517727  8.9528389  5.2288218
+NEBRASKA      -12.331096  7.4468839  18.4401829  4.9313699 -0.8418971
+NORTH DAKOTA   16.982158  2.3046058  -4.6810044 15.4671217  9.4075496
+OHIO            5.288188 -0.8487553  -7.4251555 -1.8020332  2.3244289
+SOUTH DAKOTA    0.531202 -0.4749704  -6.3575002 11.2432852  3.4255894
+WISCONSIN      12.526850  2.5346861   7.8582803  1.7923529 -9.6760850
+                   tave7       evi7       tave8     evi8
+ILLINOIS      -8.9238743  9.1478782  2.28561157 23.64526
+INDIANA       -7.6054723  6.5101895  6.03212593 28.19653
+IOWA          -0.7482716  2.7444355 -3.34666622 23.32576
+KANSAS       -15.7191804 -3.0381343  0.09338847 18.17925
+MICHIGAN      -1.5474094  1.8955092 14.97150202 31.84025
+MINNESOTA     -2.2699940 11.3801719  4.18975566 17.51814
+MISSOURI     -19.2032313  1.4894917  3.11030264 12.19041
+NEBRASKA     -17.8918662 -4.6925570  8.43356330 37.71631
+NORTH DAKOTA -12.1445983 -1.9442846  6.81215072 22.64178
+OHIO          -4.6332009  5.9735960  5.79725658 18.72174
+SOUTH DAKOTA -16.7515727 -4.2059385  2.67301992 26.33676
+WISCONSIN     -4.9644743 -0.4221058 12.66372983 30.51012
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+              Estimate Std. Error    t value
+(Intercept)  6.0155805   3.195818  1.8823291
+tave5        0.5437974   1.592220  0.3415340
+evi5        -1.4882795   8.969416 -0.1659282
+tave6        3.2682927   5.694882  0.5739000
+evi6         2.6621244   5.617746  0.4738777
+tave7       -9.3669288   3.090429 -3.0309476
+evi7         2.0698543   2.511237  0.8242369
+tave8        5.3096450   2.110365  2.5159840
+evi8        24.2351912   3.201130  7.5708245

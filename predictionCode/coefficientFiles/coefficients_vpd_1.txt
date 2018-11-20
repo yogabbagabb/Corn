@@ -1,0 +1,45 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ (1 | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 295520.5
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.3265 -0.5796  0.1050  0.6987  3.8820 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ State    (Intercept) 615.6    24.81   
+ Residual             729.6    27.01   
+Number of obs: 31328, groups:  State, 12
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept)   -5.442      7.164   -0.76
+
+_________________
+
+$State
+             (Intercept)
+ILLINOIS       20.629399
+INDIANA        17.796737
+IOWA           25.347016
+KANSAS        -42.078999
+MICHIGAN       -4.798736
+MINNESOTA      10.004949
+MISSOURI       -5.635195
+NEBRASKA      -27.476950
+NORTH DAKOTA  -42.790785
+OHIO           10.920329
+SOUTH DAKOTA  -32.810823
+WISCONSIN       5.593675
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+             Estimate Std. Error    t value
+(Intercept) -5.441615   7.164199 -0.7595567

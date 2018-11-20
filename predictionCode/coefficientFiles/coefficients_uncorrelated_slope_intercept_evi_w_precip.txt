@@ -1,0 +1,69 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ evi5 + precip5 + (1 | State) + (0 + evi5 |  
+    State) + evi6 + evi6 + (0 + evi6 | State) + evi7 + evi7 +  
+    (0 + evi7 | State) + evi8 + evi8 + (0 + evi8 | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 91243.2
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.5794 -0.5428  0.0376  0.5930  7.5823 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ State    (Intercept)  88.22    9.393  
+ State.1  evi5         89.71    9.471  
+ State.2  evi6         70.89    8.420  
+ State.3  evi7         44.50    6.671  
+ State.4  evi8         48.12    6.937  
+ Residual             366.60   19.147  
+Number of obs: 10412, groups:  State, 12
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept) -0.08944    2.76417  -0.032
+evi5        -3.10927    2.79124  -1.114
+precip5      0.75180    0.21714   3.462
+evi6         2.90088    2.48770   1.166
+evi7         2.92405    1.99596   1.465
+evi8        27.16658    2.06118  13.180
+
+Correlation of Fixed Effects:
+        (Intr) evi5   precp5 evi6   evi7  
+evi5     0.016                            
+precip5 -0.013 -0.010                     
+evi6    -0.008 -0.029 -0.005              
+evi7     0.010  0.014  0.036 -0.031       
+evi8    -0.001 -0.002 -0.042  0.018 -0.044
+
+_________________
+
+$State
+              (Intercept)       evi5   precip5       evi6       evi7     evi8
+ILLINOIS       0.06233628  -9.058609 0.7517982   8.768705  9.6235794 29.28901
+INDIANA       -4.80587992  -9.637955 0.7517982  10.269769  8.5714085 30.16657
+IOWA           6.88538707  -6.334550 0.7517982   1.932834  2.7467460 27.89450
+KANSAS       -18.84562201   4.660839 0.7517982   8.154025 -4.3317623 27.81532
+MICHIGAN       5.31148378   1.049512 0.7517982 -10.672112  5.0905637 28.45457
+MINNESOTA     10.82097028   6.328366 0.7517982  -7.100019 12.7692207 19.08745
+MISSOURI       8.17479038 -17.569658 0.7517982   9.792685  0.8070548 18.16071
+NEBRASKA     -15.02068002  13.330108 0.7517982   6.930603 -7.1763196 42.55727
+NORTH DAKOTA   0.44188858  -5.319508 0.7517982   8.604350  0.9815909 24.77895
+OHIO           5.79866904  -9.816928 0.7517982   3.953839  7.4231073 18.45731
+SOUTH DAKOTA  -4.22744172 -11.484094 0.7517982   6.554831 -6.5979937 31.66016
+WISCONSIN      4.33086867   6.541289 0.7517982 -12.378910  5.1814570 27.67715
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+              Estimate Std. Error     t value
+(Intercept) -0.0894358  2.7641666 -0.03235543
+evi5        -3.1092656  2.7912411 -1.11393658
+precip5      0.7517982  0.2171368  3.46232536
+evi6         2.9008833  2.4876980  1.16609143
+evi7         2.9240544  1.9959646  1.46498308
+evi8        27.1665806  2.0611780 13.18012322

@@ -1,0 +1,204 @@
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ (1 | State) + vpdave5 + I(vpdave5^2) + vpdave6 +  
+    I(vpdave6^2) + vpdave7 + I(vpdave7^2) + vpdave8 + I(vpdave8^2) +  
+    (0 + vpdave5 + I(vpdave5^2) | State) + (0 + vpdave6 + I(vpdave6^2) |  
+    State) + (0 + vpdave7 + I(vpdave7^2) | State) + (0 + vpdave8 +  
+    I(vpdave8^2) | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 91785.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.3635 -0.5978  0.0900  0.6855  3.1788 
+
+Random effects:
+ Groups   Name         Variance Std.Dev. Corr 
+ State    (Intercept)  1695.47  41.176        
+ State.1  vpdave5        79.22   8.901        
+          I(vpdave5^2)   13.96   3.737   -0.43
+ State.2  vpdave6      2055.26  45.335        
+          I(vpdave6^2)   49.82   7.059   -0.83
+ State.3  vpdave7        79.65   8.925        
+          I(vpdave7^2)   17.71   4.208   -0.36
+ State.4  vpdave8       108.34  10.409        
+          I(vpdave8^2)  169.69  13.026   0.56 
+ Residual               378.70  19.460        
+Number of obs: 10412, groups:  State, 12
+
+Fixed effects:
+             Estimate Std. Error t value
+(Intercept)    2.7100    11.8980   0.228
+vpdave5        3.9894     2.6250   1.520
+I(vpdave5^2)  -0.1555     1.1391  -0.137
+vpdave6        6.6617    13.1076   0.508
+I(vpdave6^2)  -5.1438     2.0981  -2.452
+vpdave7      -17.9834     2.6719  -6.731
+I(vpdave7^2)  -2.3746     1.2884  -1.843
+vpdave8      -20.1446     3.1375  -6.421
+I(vpdave8^2)  -3.1366     3.8338  -0.818
+
+Correlation of Fixed Effects:
+            (Intr) vpdav5 I(5^2) vpdav6 I(6^2) vpdav7 I(7^2) vpdav8
+vpdave5      0.000                                                 
+I(vpdav5^2) -0.001 -0.385                                          
+vpdave6      0.000 -0.004 -0.002                                   
+I(vpdav6^2) -0.001 -0.003 -0.019 -0.796                            
+vpdave7     -0.002  0.007  0.001 -0.008 -0.004                     
+I(vpdav7^2) -0.002 -0.005 -0.001 -0.002 -0.033 -0.336              
+vpdave8      0.002 -0.003 -0.005  0.000 -0.003 -0.024 -0.001       
+I(vpdav8^2)  0.001  0.001 -0.005 -0.001 -0.002  0.008 -0.022  0.551
+convergence code: 0
+unable to evaluate scaled gradient
+Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
+failure to converge in 10000 evaluations
+
+
+_________________
+
+$State
+             (Intercept)    vpdave5 I(vpdave5^2)    vpdave6 I(vpdave6^2)
+ILLINOIS      19.2700895  8.5493985   1.95010312 -0.7939892   -8.6374908
+INDIANA        9.3398450  6.3761949  -0.01735096 10.2402996   -7.8733466
+IOWA          21.6781743 -2.3424308   4.82526964 10.9269750   -8.6824967
+KANSAS         2.5728540  2.9386854  -1.52621378 -8.9256972    0.5022631
+MICHIGAN     -10.1339338 -1.5724509  -6.78101866  0.9108193   -1.5830196
+MINNESOTA     16.6700201  8.0199971   2.39592370 18.3930096   -8.1759035
+MISSOURI       3.4668001 21.4598649  -5.39449434  7.8983311    1.4101514
+NEBRASKA     -10.3073833  0.9731996   0.11047555  0.8181952   -2.2891746
+NORTH DAKOTA -23.3630293  5.3050903  -1.88830064  4.0422828   -4.9067371
+OHIO           9.0382252 -1.1772295   1.20324296  9.8242454   -9.9248245
+SOUTH DAKOTA  -5.4684290 -2.6117601   2.24962104 18.8600142   -9.8116258
+WISCONSIN     -0.2436639  1.9545265   1.00616638  7.7454694   -1.7532610
+                vpdave7 I(vpdave7^2)   vpdave8 I(vpdave8^2)
+ILLINOIS     -16.334979   -4.4299691 -17.58833    2.7872760
+INDIANA      -22.192150   -6.6393681 -19.11043    6.8931043
+IOWA         -12.958652   -5.9727240 -16.74692    2.5765137
+KANSAS       -22.746506    2.7820135 -13.85916    0.9955443
+MICHIGAN       3.275664   -2.7830225 -43.17849  -25.4844974
+MINNESOTA    -25.982121   -5.1977279 -14.97476   -9.7110972
+MISSOURI     -12.186455   -6.4150895 -15.80099    4.1461682
+NEBRASKA     -26.255210    3.4937835 -29.37368    5.6935241
+NORTH DAKOTA -15.823325    0.4849568 -10.66011   -6.3502110
+OHIO         -16.761351   -2.1112317 -17.30719   -1.1309914
+SOUTH DAKOTA -31.698598    3.1342343 -19.57163    3.0810658
+WISCONSIN    -16.137281   -4.8408484 -23.56316  -21.1359542
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+               Estimate Std. Error    t value
+(Intercept)    2.709964  11.897973  0.2277669
+vpdave5        3.989424   2.624985  1.5197890
+I(vpdave5^2)  -0.155548   1.139061 -0.1365581
+vpdave6        6.661663  13.107550  0.5082310
+I(vpdave6^2)  -5.143789   2.098132 -2.4516040
+vpdave7      -17.983414   2.671863 -6.7306641
+I(vpdave7^2)  -2.374583   1.288417 -1.8430232
+vpdave8      -20.144571   3.137469 -6.4206443
+I(vpdave8^2)  -3.136630   3.833844 -0.8181422
+Linear mixed model fit by REML ['lmerMod']
+Formula: yield_rainfed_ana ~ (1 | State) + vpdave5 + I(vpdave5^2) + vpdave6 +  
+    I(vpdave6^2) + vpdave7 + I(vpdave7^2) + vpdave8 + I(vpdave8^2) +  
+    (0 + vpdave5 + I(vpdave5^2) | State) + (0 + vpdave6 + I(vpdave6^2) |  
+    State) + (0 + vpdave7 + I(vpdave7^2) | State) + (0 + vpdave8 +  
+    I(vpdave8^2) | State)
+   Data: data.train
+Control: lmerControl(optimizer = "Nelder_Mead")
+
+REML criterion at convergence: 91785.9
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.3635 -0.5978  0.0900  0.6855  3.1788 
+
+Random effects:
+ Groups   Name         Variance Std.Dev. Corr 
+ State    (Intercept)  1695.47  41.176        
+ State.1  vpdave5        79.22   8.901        
+          I(vpdave5^2)   13.96   3.737   -0.43
+ State.2  vpdave6      2055.26  45.335        
+          I(vpdave6^2)   49.82   7.059   -0.83
+ State.3  vpdave7        79.65   8.925        
+          I(vpdave7^2)   17.71   4.208   -0.36
+ State.4  vpdave8       108.34  10.409        
+          I(vpdave8^2)  169.69  13.026   0.56 
+ Residual               378.70  19.460        
+Number of obs: 10412, groups:  State, 12
+
+Fixed effects:
+             Estimate Std. Error t value
+(Intercept)    2.7100    11.8980   0.228
+vpdave5        3.9894     2.6250   1.520
+I(vpdave5^2)  -0.1555     1.1391  -0.137
+vpdave6        6.6617    13.1076   0.508
+I(vpdave6^2)  -5.1438     2.0981  -2.452
+vpdave7      -17.9834     2.6719  -6.731
+I(vpdave7^2)  -2.3746     1.2884  -1.843
+vpdave8      -20.1446     3.1375  -6.421
+I(vpdave8^2)  -3.1366     3.8338  -0.818
+
+Correlation of Fixed Effects:
+            (Intr) vpdav5 I(5^2) vpdav6 I(6^2) vpdav7 I(7^2) vpdav8
+vpdave5      0.000                                                 
+I(vpdav5^2) -0.001 -0.385                                          
+vpdave6      0.000 -0.004 -0.002                                   
+I(vpdav6^2) -0.001 -0.003 -0.019 -0.796                            
+vpdave7     -0.002  0.007  0.001 -0.008 -0.004                     
+I(vpdav7^2) -0.002 -0.005 -0.001 -0.002 -0.033 -0.336              
+vpdave8      0.002 -0.003 -0.005  0.000 -0.003 -0.024 -0.001       
+I(vpdav8^2)  0.001  0.001 -0.005 -0.001 -0.002  0.008 -0.022  0.551
+convergence code: 0
+unable to evaluate scaled gradient
+Model failed to converge: degenerate  Hessian with 2 negative eigenvalues
+failure to converge in 10000 evaluations
+
+
+_________________
+
+$State
+             (Intercept)    vpdave5 I(vpdave5^2)    vpdave6 I(vpdave6^2)
+ILLINOIS      19.2700895  8.5493985   1.95010312 -0.7939892   -8.6374908
+INDIANA        9.3398450  6.3761949  -0.01735096 10.2402996   -7.8733466
+IOWA          21.6781743 -2.3424308   4.82526964 10.9269750   -8.6824967
+KANSAS         2.5728540  2.9386854  -1.52621378 -8.9256972    0.5022631
+MICHIGAN     -10.1339338 -1.5724509  -6.78101866  0.9108193   -1.5830196
+MINNESOTA     16.6700201  8.0199971   2.39592370 18.3930096   -8.1759035
+MISSOURI       3.4668001 21.4598649  -5.39449434  7.8983311    1.4101514
+NEBRASKA     -10.3073833  0.9731996   0.11047555  0.8181952   -2.2891746
+NORTH DAKOTA -23.3630293  5.3050903  -1.88830064  4.0422828   -4.9067371
+OHIO           9.0382252 -1.1772295   1.20324296  9.8242454   -9.9248245
+SOUTH DAKOTA  -5.4684290 -2.6117601   2.24962104 18.8600142   -9.8116258
+WISCONSIN     -0.2436639  1.9545265   1.00616638  7.7454694   -1.7532610
+                vpdave7 I(vpdave7^2)   vpdave8 I(vpdave8^2)
+ILLINOIS     -16.334979   -4.4299691 -17.58833    2.7872760
+INDIANA      -22.192150   -6.6393681 -19.11043    6.8931043
+IOWA         -12.958652   -5.9727240 -16.74692    2.5765137
+KANSAS       -22.746506    2.7820135 -13.85916    0.9955443
+MICHIGAN       3.275664   -2.7830225 -43.17849  -25.4844974
+MINNESOTA    -25.982121   -5.1977279 -14.97476   -9.7110972
+MISSOURI     -12.186455   -6.4150895 -15.80099    4.1461682
+NEBRASKA     -26.255210    3.4937835 -29.37368    5.6935241
+NORTH DAKOTA -15.823325    0.4849568 -10.66011   -6.3502110
+OHIO         -16.761351   -2.1112317 -17.30719   -1.1309914
+SOUTH DAKOTA -31.698598    3.1342343 -19.57163    3.0810658
+WISCONSIN    -16.137281   -4.8408484 -23.56316  -21.1359542
+
+attr(,"class")
+[1] "coef.mer"
+
+_________________
+
+               Estimate Std. Error    t value
+(Intercept)    2.709964  11.897973  0.2277669
+vpdave5        3.989424   2.624985  1.5197890
+I(vpdave5^2)  -0.155548   1.139061 -0.1365581
+vpdave6        6.661663  13.107550  0.5082310
+I(vpdave6^2)  -5.143789   2.098132 -2.4516040
+vpdave7      -17.983414   2.671863 -6.7306641
+I(vpdave7^2)  -2.374583   1.288417 -1.8430232
+vpdave8      -20.144571   3.137469 -6.4206443
+I(vpdave8^2)  -3.136630   3.833844 -0.8181422
