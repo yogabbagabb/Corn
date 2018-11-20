@@ -1,0 +1,610 @@
+\documentclass[a4paper]{article}
+\usepackage{preamble}
+\usepackage{374_preamble}
+\usepackage{array}
+\usepackage{geometry}
+ \geometry{ a4paper,
+ left=20mm,
+ right=20mm,
+ top=20mm}
+\begin{document}
+
+%\section{Need to Test (Notes to Self):}
+%\begin{outline}
+    %\1 Use a FIPS code for the spline terms.
+    %\1 Wherever State was used as a grouping factor in the
+    %penultimate set of trails, also add FIPS.
+    %\1 Consider testing varying slope terms (without fixed
+    %effect terms) in more incremental ways.
+%\end{outline}
+\section{Final Report -- Aahan Agrawal}
+\underline{What does this report do?} \\
+
+This report addresses the question (with respect to the corn yield data set that I have been working on): Does introducing varying slopes and/or varying intercepts into a regression model $f$ allow the resultant model to outperform $f$. A thorough examination of this question would require testing far more models than feasibly test-able. My examination tests models belonging to a wide enough coverage of models, however, that we can (with high confidence) say the following:
+
+An ordinary least squares model $f$ using $\dots$
+\begin{enumerate}
+    \item  only \textit{linear} terms can be improved by making $f$ hierarchical. \\
+    \item only \textit{linear and quadratic} can be improved by making $f$ hierarchical. \\
+    \item \textit{splines} is not likely improveable by making $f$ hierarchical.
+\end{enumerate}
+
+\underline{What does this report not do?}
+
+This report does not answer the question \textit{Can a hierarchical linear model (aka a mixed effects model)} beat our current, best model? -- which is codenamed \textit{vpd\_spline\_evi\_poly}. This report only constructed hierarchical models using \textit{lmer}; moreover, there are additional features of hierarchical linear models that we can test. For example, does a heterogenous residual covariance structure lead to better model performance, or does a hierarchical linear model obtained by specifying Bayesian priors outperform our model. The former can be assessed using the package \textit{nlme}; the latter can be assessed using packages like \textit{stan}.
+
+
+\subsection{Input Variables}
+The input variables selected are precisely those input variablesthat Yan Li's model explored different combinations of. These variables were found through some previous analysis to be the most potent ones.
+\begin{center}
+\begin{tabular}{| p{0.10\linewidth} | l|} 
+\hline
+Abbreviation & Expanded Term \\ 
+\hline
+VPD & $\ta{vpdave}5 + \ta{vpdave}6 + \ta{vpdave}7 + \ta{vpdave}8$ \\ 
+\hline
+TAVE & $\ta{tave}5 + \ta{tave}6 + \ta{tave}7 + \ta{tave}8$ \\ 
+\hline
+PRECIP & $\ta{precip}5 + \ta{precip}6 + \ta{precip}7 + \ta{precip}8$ \\ 
+\hline
+EVI & $\ta{evi}5 + \ta{evi}6 + \ta{evi}7 + \ta{evi}8$ \\ 
+\hline
+VPD$^2$ & $\ta{vpdave}5 + \ta{vpdave}6 + \ta{vpdave}7 + \ta{vpdave}8 + \ta{vpdave}5^2 + \ta{vpdave}6^2 + \ta{vpdave}7^2 + \ta{vpdave}8^2$ \\ 
+\hline
+TAVE$^2$ & $\ta{tave}5 + \ta{tave}6 + \ta{tave}7 + \ta{tave}8 + \ta{tave}5^2 + \ta{tave}6^2 + \ta{tave}7^2 + \ta{tave}8^2$ \\ 
+\hline
+PRECIP$^2$ & $\ta{precip}5 + \ta{precip}6 + \ta{precip}7 + \ta{precip}8 + \ta{precip}5^2 + \ta{precip}6^2 + \ta{precip}7^2 + \ta{precip}8^2$ \\ 
+\hline
+EVI$^2$ & $\ta{evi}5 + \ta{evi}6 + \ta{evi}7 + \ta{evi}8 + \ta{evi}5^2 + \ta{evi}6^2 + \ta{evi}7^2 + \ta{evi}8^2$ \\ 
+\hline
+$\ta{VPD}_2$ & $\ta{vpdave}6 + \ta{vpdave}7 + \ta{vpdave}8 + \ta{vpdave}9 + \ta{vpdave}6^2 + \ta{vpdave}7^2 + \ta{vpdave}8^2 + \ta{vpdave}9^2$ \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\section{Model Performances}
+The tables below list model configurations and their performance(in terms of RMSE and $R^2$) using leave-one-out cross validation on years from 2003 to 2006. The formula specifications below are specifications that the package \textit{lme4} can fit using the function \textit{lmer}. In each formula, $Y$ represents \textit{rainfed yield anomaly}\footnote{Note to self: add more details for others, if needbe}.
+
+
+
+\subsection{Models with only Linear Terms}
+For each of the $\binom{4}{2} = 6$ combinations of $2$ predictors from the $4$, previous predictors -- the following tables show that, consistently, a varying slope and varying intercept model produces a non-trivial reduction (the reduction is at least $1$) in RMSE. 
+\begin{center}
+\begin{tabular}{| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI}$ & 20.544680 & 0.690445212535\\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{vpdave}j) | \ta{State})$ & 19.364378 &  0.712176959856 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j) | \ta{State})$ & 19.354932 &  0.728661647677 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{vpdave}j) | \ta{State})$ & 18.311311 & 0.735956309523 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{vpdave}j) | \ta{State})$ & 18.635979 & 0.726468705361 \\ 
+\hline
+Model File: vpd\_evi.csv & & \\
+\hline
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE}$ & 25.484906 & 0.514984759119 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{vpdave}j) | \ta{State})$ & 23.141803 & 0.634082857334 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j) | \ta{State})$ & 25.444579 & 0.571100953388 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j + \ta{vpdave}j) | \ta{State})$ & 22.087563 & 0.651670587067 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \sum_{j=5}^{8}(0 +  \ta{tave}j + \ta{vpdave}j) | \ta{State})$ & 23.200899 & 0.596111655752 \\ 
+\hline
+Model File: vpd\_tave.csv & & \\
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP}$ & 27.478782 &  0.534561106423 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{vpdave}j) | \ta{State})$ & 23.353088 & 0.616543312825 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j) | \ta{State})$ & 26.898276 & 0.420015747551 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{vpdave}j) | \ta{State})$ & 22.964402 & 0.611345395363 \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{vpdave}j) | \ta{State})$ & 24.361307 & 0.55026376432 \\ 
+\hline
+Model File: vpd\_precip.csv & & \\
+\hline
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP}$ & 31.575936 & 0.282355708807 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j) | \ta{State})$ & 25.438664 & 0.578968289794 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j) | \ta{State})$ & 26.421840 & 0.438308246651 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{tave}j) | \ta{State})$ & 24.579791 & 0.582927778914\\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{tave}j) | \ta{State})$ & 28.574156 & 0.439021248291 \\ 
+\hline
+Model File: tave\_precip.csv & & \\
+\hline
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI}$ & 20.855124 & 0.669898327672 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j) | \ta{State})$ & 19.993899 & 0.707643929601 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j) | \ta{State})$ & 18.887613 &  0.731858082188 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{tave}j) | \ta{State})$ & 18.970730 & 0.715730529989 \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{tave}j) | \ta{State})$ & 19.477666 & 0.701345161395 \\ 
+\hline
+Model File: tave\_evi.csv & & \\
+\hline
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI}$ & 20.753574 & 0.671635695019 \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j) | \ta{State})$ & 19.765463 & 0.696725746026 \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j) | \ta{State})$ & 19.023711 & 0.730069240143 \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{precip}j) | \ta{State})$ & 19.000063 & 0.703405604865 \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{precip}j) | \ta{State})$ & 19.141144 & 0.704596192832 \\ 
+\hline
+Model File: precip\_evi.csv & & \\
+\hline
+\hline
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI}$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{EVI} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE}$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j + \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{TAVE} + \sum_{j=5}^{8}(0 +  \ta{tave}j + \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP}$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{VPD} + \ta{PRECIP} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{vpdave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP}$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{PRECIP} + \sum_{j=5}^{8}(0 +  \ta{precip}j + \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI}$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{TAVE} + \ta{EVI} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{tave}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI}$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{precip}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \ta{(1 | \ta{State})} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{precip}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+$Y \sim \ta{PRECIP} + \ta{EVI} + \sum_{j=5}^{8}(0 +  \ta{evi}j + \ta{precip}j) | \ta{State})$ + \ta{FIPS} & Too Slow &  \\ 
+\hline
+\hline
+\end{tabular}
+\end{center}
+
+
+\begin{remark}
+    The only difference between the foregoing table and the one before is the inclusion of the categorical variable FIPS.
+\end{remark}
+
+\subsection{Models with both Linear and Quadratic Terms}
+A limitation to comparing OLS models with their hierarchical counterparts is the speed of the function \textit{lmer}. I had to judiciously choose which quadratic configurations to test. I tested that two variable configuration that performed best in a hierarchical, linear setting (aka, the best two predictors from the previous section). These predictors were \textit{vpd} and \textit{evi}. 
+
+The best hierarchical model obtained, thus far, is the first model below. Yan's model achieves $14.12$ on my computer; this model is, thus, $\approx 1.2$ from beating it.
+
+\begin{center}
+\begin{tabular}{p{0.5cm}| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+\hline
+0 & $Y \sim \ta{VPD}^2 + \ta{EVI}^2 + \ta{FIPS}$ & 16.215485 & 0.826705467015 \\ 
+\hline
+\hline
+ 1 & $Y \sim (1 | \ta{State/FIPS}) + (0 + \ta{vpdave}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ &  15.3038210479 & 0.826380762922 \\ 
+\hline 
+
+ 2 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.8172458781  & 0.828004410114 \\ 
+\hline
+
+3 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 18.1374174468 & 0.738894981982 \\ 
+\hline 
+
+4 & $Y \sim \ta{FIPS} + (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 15.4375549205 & 0.822523701085 \\ 
+\hline 
+
+ 5 & $Y \sim \ta{FIPS} + (0 + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 15.4375532927 & 0.822523710874 \\ 
+\hline 
+
+ 6 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 18.6300956404  & 0.739217284291 \\ 
+\hline
+
+
+ 7 & $Y \sim (1 | \ta{State}) + \ta{FIPS} + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 17.0266628131  & 0.821941970817 \\ 
+\hline
+
+ 8 & $Y \sim \ta{FIPS} + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 17.0266636351  & 0.821941972477 \\ 
+\hline
+
+9 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpd}j) + \ta{EVI}^2$ & 15.41829 & Not Recorded  \\ 
+\hline
+
+9.5 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpd}j) + \ta{EVI}^2 + \ta{PRECIP}^2$ & 15.15744 & 0.823426956995  \\ 
+\hline
+
+9.75 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpd}j) + \ta{EVI}^2 + \ta{PRECIP}$ & 15.56885 & Not Recorded  \\ 
+\hline
+
+9.8 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpd}j) + \ta{EVI}^2 + \ta{PRECIP} + \ta{TAVE}$ & 15.57028 & Not Recorded  \\ 
+\hline
+
+9.85 & $Y \sim (1 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{PRECIP}^2$ & 15.57028 & 0.827454224527  \\ 
+\hline
+
+9.9 & $Y \sim \ta{FIPS} + \ta{VPD}^2 + \ta{EVI}^2 + \ta{PRECIP}^2$ & 15.2295013561 & 0.826245345743  \\ 
+\hline
+
+10 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State}) + \sum_{j=5}^{8}(\ta{vpd}j^2) + \ta{EVI}^2$ & 16.87682 & Not Recorded  \\ 
+\hline
+\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+    We form conclusions by comparing two models at a time.
+    Given models $x$ and $y$, we denote a comparison between
+    $x$ and $y$ as $x \to y$ or, equivalently, $y \to x$.
+    These conclusions are not absolute conclusions applicable to all combinations of such predictors; they are specific to VPD and EVI.
+    \begin{outline}
+       \1 $0 \to 1$
+       \2 A hierarchical model at the nesting level of
+       $\ta{State/FIPS}$ outperforms its OLS counterpart by
+       only making the quadratic tems of VPD hierarchical.
+       \1 $1 \to 2$ 
+       \2 Using quadratic terms in a hierarchical fashion with VPD produces a lower RMSE than linear terms in a hierarchical fashion.
+       \1 $1 \to 3$
+       \2 Using a hierarchical nesting at the level of $\ta{State/FIPS}$ vastly outperforms one at the level of $\ta{State}$.
+       \1 $1 \to 4$
+       \2 If we switch to a hierarchical nesting at the level of $\ta{State}$, then the resulting model $M$ still performs
+       as well as $(1)$ if we include $\ta{FIPS}$ as a categorical predictor.
+       \1 $1 \to 5$
+       \2 If, in addition to performing
+       the transition from $1 \to 4$, we remove a state varying intercept, then model performance is similar.
+       \1 $1 \to 9$
+       \2 If we exclude fixed quadratic terms from $(1)$ to produce $(9)$, then the model is essentially unaffected.
+       \1 $1 \to 25$
+       \2 By additionally including vpdave$j$ (in linear form) in a hiearchical form, we actually increase model RMSE.
+       \1 \textbf{Conclusion:} We conclude that designating exclusive designation of vpdave$j^2$ with a hierarchical nesting of State/FIPS (whether or not we include vpdave$j^2$ as fixed effects) accounts for an increase in model performance relative to $(0)$.
+    \end{outline}
+\end{remark}
+
+\begin{center}
+\begin{tabular}{p{0.5cm}| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+\hline
+
+ 10 & $Y \sim (1 | \ta{State/FIPS}) + (0 + \ta{evi}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.19348181 & 0.817465569625 \\ 
+\hline 
+
+ 11 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.1919480524  & 0.820518275344 \\ 
+\hline
+
+ 12 & $Y \sim (1 | \ta{State}) + (0 + \ta{evi}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ &  18.1768259011 & 0.752075770163 \\ 
+
+
+\hline 
+ 13 & $Y \sim \ta{FIPS} + (1 | \ta{State}) + (0 + \ta{evi}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ &  16.3115256355 & 0.824932000932 \\ 
+\hline 
+
+ 14 & $Y \sim \ta{FIPS} + (0 + \ta{evi}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ &  16.3115262051 & 0.824931967594 \\ 
+\hline 
+
+ 15 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 18.0094398131  & 0.763723653186 \\ 
+\hline
+
+16 & $Y \sim (1 | \ta{State}) + \ta{FIPS} + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.1087687869  & 0.824731290507 \\ 
+\hline
+
+\hline
+17 & $Y \sim \ta{FIPS} + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.10877 &  \\ 
+\hline
+\hline
+ 17.5 & $Y \sim \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State/FIPS})$ & 18.0485664898 & 0.73822634737 \\ 
+\hline
+\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+    No worthwhile conclusions were derived from the models above.
+\end{remark}
+
+\begin{remark}
+Across the tested models below, we see that OLS outperforms any hierarchical variant. These following models differ from the previous ones in that in the following models, if any type of term (like EVI or VPD) is hierarchical, then both its linear and quadratic terms are hierarchical. In the previous models, only some terms were made hierarchical (for example, in the first model, only the quadratic terms for VPD were made hierarchical).
+\end{remark}
+
+\begin{center}
+\begin{tabular}{p{0.5cm}| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+\hline
+ 18 & $Y \sim \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State})$ & 16.8330513198 & 0.771008277292 \\ 
+\hline
+ 19 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State/FIPS})$ & Too Slow &  \\ 
+\hline
+ 20 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State})$ & 16.1995687149 & 0.812787817595  \\ 
+\hline
+ 21 & $Y \sim \ta{FIPS} + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State/FIPS})$ & Too Slow &  \\ 
+\hline
+ 22 & $Y \sim \ta{FIPS} + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State})$ & Too Slow &  \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\begin{remark}
+    The models above used no fixed slopes. The only worthwhile conclusion is that any attempt to use both predictors (using all terms of either predictor) in a hierarchical fashion at the nesting level of State/FIPS is too slow; one must, in such instances, use a nesting level at State.
+\end{remark}
+
+
+\begin{center}
+\begin{tabular}{p{0.5cm}| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+23 & $Y \sim \ta{VPD}^2 + \ta{EVI}^2 + \ta{FIPS}$ & 16.215485 & 0.826705467015 \\ 
+\hline
+\hline
+24 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j + \ta{vpdave}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ &  16.340984 & 0.835150088356 \\ 
+\hline 
+25 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.363754  & 0.834681967626 \\ 
+\hline
+25.5 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j^2 | \ta{State/FIPS}) + \sum_{j=5}^{8}\ta{evi}j + \sum_{j=5}^{8}\ta{evi}j^2$ & 16.2832078828  & 0.83683250389 \\ 
+\hline
+26 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 22.101831 & 0.62603263168 \\ 
+\hline
+\hline
+27 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2$ & 16.348400  & 0.812158682912 \\ 
+\hline
+28 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ &  18.115606 & 0.768067169275 \\ 
+\hline
+\hline
+29 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpd}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2 $& 16.592315 & 0.80587212731 \\ 
+\hline
+30 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2$ & 18.101450 & 0.738205574132 \\ 
+\hline
+\hline
+31 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{FIPS}$ & Too Slow & \\ 
+\hline
+32 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{FIPS}$ &  Too Slow & \\ 
+\hline
+33 & $Y \sim (1 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{evi}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j| \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{FIPS}$ & Too Slow & \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\hspace*{-9cm}
+
+\begin{remark}
+    The following models were mistakenly tested. They may be of potential use, so they have been included.
+\end{remark}
+
+\begin{center}
+    \begin{tabular}{| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+Formula & RMSE & $R^2$ \\ 
+\hline
+$Y \sim \ta{FIPS} + \ta{VPD}^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 15.897125 &  \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 15.613374 & \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpd}j | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 41.027641 & \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 15.579032 & \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j + \ta{vpdave}j^2 | \ta{State/FIPS}) + \ta{VPD}^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 15.576379 & \\ 
+\hline 
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{| p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+$Y \sim \ta{FIPS} + \ta{VPD}_2^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 15.648232 & 0.817781770286 \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \ta{VPD}_2^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 16.081548 & 0.810822930257 \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j | \ta{State/FIPS}) + \ta{VPD}_2^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 26.064453 & 0.565483242945 \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State/FIPS}) + \ta{VPD}_2^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 16.373051 & 0.807700513379 \\ 
+\hline
+$Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j + \ta{tave}j^2 | \ta{State/FIPS}) + \ta{VPD}_2^2 + \ta{EVI}^2 + \ta{TAVE}^2$ & 16.377212 & 0.800983591304 \\ 
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Models with Splines}
+It is far too slow to make spline terms hierarchical in lmer. The following table tests other configurations in which \textit{evi} and \textit{vpd} have been set to be hierarchical. These configurations are feasibly testable.
+\begin{center}
+\begin{tabular}{|p{0.5cm} | p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+ 34 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + (1 | \ta{State/FIPS}) + \ta{(0 + evi5 + evi6 + evi7 + evi8 + evi9 | State/FIPS)} + \ta{I(evi5}^2) + \ta{I(evi6}^2) + \ta{I(evi7}^2) + \ta{I(evi8}^2) + \ta{I(evi9}^2)$ & 15.681009 &  \\ 
+\hline
+ 35 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + (1 | \ta{State/FIPS}) + \ta{(0 + evi5 + evi6 + evi7 + evi8 + evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2 | \ta{State/FIPS})$ & 16.690290 &  \\ 
+\hline
+\hline
+ 36 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State/FIPS)} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & 15.7699073035 & 0.821561275634 \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_evi\_poly\_3\_levels\_linear & & \\
+\hline
+ 37 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + \ta{FIPS} + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State/FIPS)} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & Too Slow &  \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_evi\_poly\_3\_levels\_linear & & \\
+\hline
+ 38 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State/FIPS} + \sum_{j=5}^{8}\ta{(0 + evi$j^2$ | State/FIPS} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & 16.1487508508 & 0.815035367194 \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_evi\_poly\_3\_levels\_quadratic & & \\
+\hline
+ 39 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + \ta{FIPS} + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State/FIPS} + \sum_{j=5}^{8}\ta{(0 + evi$j^2$ | State/FIPS} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & Too Slow &  \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_evi\_poly\_3\_levels\_quadratic & & \\
+\hline
+ 40 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + (1 | \ta{State}) + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & 15.7699073035 & 0.821561275634  \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_evi\_poly\_2\_levels\_linear & & \\
+\hline
+ 41 & $Y \sim \ta{bs(vpdave6)} + \ta{bs(vpdave7)} + \ta{bs(vpdave8)} + \ta{bs(precip6)} + \ta{bs(precip7)} + \ta{bs(precip8)} + \ta{bs(precip9)} + (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State/FIPS} + \sum_{j=5}^{8}\ta{(0 + evi$j^2$ | State/FIPS} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & 16.4815882954 & 0.819030329586 \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_evi\_poly\_2\_levels\_quadratic & & \\
+\hline
+ 42 & $Y \sim \ta{(bs(vpdave6) | State)} + \ta{(bs(vpdave7) | State)} + \ta{(bs(vpdave8) | State)} + \ta{(bs(precip6) | State)} + \ta{(bs(precip7) | State)} + \ta{(bs(precip8) | State)} + \ta{(bs(precip9) | State)} + (1 | \ta{State}) + \sum_{j=5}^{8}\ta{(0 + evi$j$ | State} + \sum_{j=5}^{8}\ta{(0 + evi$j^2$ | State} + \ta{evi5}+ \ta{evi6}+ \ta{evi7}+ \ta{evi8} + \ta{evi9} + \ta{evi5}^2 + \ta{evi6}^2 + \ta{evi7}^2 + \ta{evi8}^2 + \ta{evi9}^2$ & Too Slow & \\ 
+\hline
+& Model File: vpd\_spline\_evi\_mixed\_fixed: vpd\_spline\_level\_evi\_poly\_2\_levels\_quadratic & & \\
+\hline
+\end{tabular}
+\end{center}
+
+ 
+\subsection{July 26 Models}
+\begin{center}
+\begin{tabular}{|p{0.5cm} | p{0.75\linewidth} | m{2cm}| r|} 
+\hline
+43 & $Y \sim \ta{VPD} + \ta{EVI} + (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State})$ & 15.9939086929 & 0.812046567006\\ 
+\hline
+44 & $Y \sim \ta{VPD}^2 + \ta{EVI} + \ta{FIPS}$ & 16.0647094694 & 0.800835719225\\ 
+\hline
+45 & $Y \sim \ta{VPD} + \ta{EVI} + (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State})$ & 16.4501305392 & 0.790718198859\\ 
+\hline
+45.5 & $Y \sim  \ta{EVI} + (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State})$ & 16.4657997817 & 0.790794426889\\ 
+\hline
+46 & $Y \sim \ta{VPD} + \ta{EVI} + \ta{FIPS}$ & 16.2808292464 & 0.8069381615\\ 
+\hline
+47 & $Y \sim \ta{VPD} + \ta{PRECIP}$ & 27.4787816043 & 0.534561106423\\ 
+\hline
+48 & $Y \sim \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \ta{PRECIP}$ & 24.6774265412 & 0.535789491522\\ 
+\hline
+\end{tabular}
+\end{center}
+
+\newpage
+\subsection{August 6 Models}
+\begin{center}
+\begin{tabular}{|p{0.5cm} | p{0.9\linewidth} | m{0.75cm}| r|} 
+\hline
+\hline
+0 & $Y \sim \ta{FIPS} + \ta{VPD}^2 + \ta{PRECIP}^2$ & 17.304 & 0.772 \\ 
+\hline
+\hline
+1 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.409& 0.742 \\ %1
+\hline
+2 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.456 & 0.753\\ %2
+\hline
+3 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.155 & 0.737 \\ %3
+\hline
+4 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.782 & 0.781 \\ %4
+\hline
+5 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 17.631 & 0.773 \\ %5
+\hline
+6 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.580 & 0.770 \\ %6
+\hline
+7 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{vpdave}j^2) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 17.918 & 0.756 \\ %7
+\hline
+8 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.658 & 0.783 \\ %8
+\hline
+9 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 17.552 & 0.767 \\ %9
+\hline
+10 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.338 & 0.785\\ %10
+\hline
+11 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{vpdave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 17.531 & 0.768 \\ %11
+\hline
+12 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.724 & 0.777 \\ %12
+\hline
+13 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 17.767 & 0.771 \\ %13
+\hline
+14 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 17.826 & 0.774 \\ %14
+\hline
+15 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{vpdave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.028 & 0.773 \\ %15
+\hline
+\end{tabular}
+\end{center}
+
+
+\begin{center}
+\begin{tabular}{|p{0.5cm} | p{0.9\linewidth} | m{1.4cm}| r|} 
+\hline
+\hline
+0 & $Y \sim \ta{FIPS} + \ta{TAVE}^2 + \ta{PRECIP}^2$ & 17.922 & \\ 
+\hline
+\hline
+1 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 17.862 & \\ %1
+\hline
+2 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.058 & \\ %2
+\hline
+3 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.438 & \\ %3
+\hline
+4 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.940 & \\ %4
+\hline
+5 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 19.076 & \\ %5
+\hline
+6 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.766 & \\ %6
+\hline
+7 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(\ta{tave}j^2) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 19.625 & \\ %7
+\hline
+8 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.627  & \\ %8
+\hline
+9 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.508 & \\ %9
+\hline
+10 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.632 & \\ %10
+\hline
+11 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{tave}j) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.658 & \\ %11
+\hline
+12 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.981 & \\ %12
+\hline
+13 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j^2) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 18.781 & \\ %13
+\hline
+14 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(\ta{precip}j)$ & 18.918 & \\ %14
+\hline
+15 & $Y \sim (1 | \ta{State/FIPS}) + \sum_{j=5}^{8}(0 + \ta{tave}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{tave}j | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j^2 | \ta{State}) + \sum_{j=5}^{8}(0 + \ta{precip}j | \ta{State})$ & 19.095 & \\ %15
+\hline
+\end{tabular}
+\end{center}
+
+\end{document}
+
